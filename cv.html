@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>経歴 - 角田 陽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-brand">角田 陽</a>
+      <button class="nav-toggle" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="index.html">ホーム</a></li>
+          <li><a href="research.html">研究</a></li>
+          <li><a href="publications.html">業績</a></li>
+          <li><a href="cv.html" class="active">経歴</a></li>
+          <li><button class="theme-toggle" aria-label="テーマ切替">🌙</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+
+      <h1 class="section-title fade-in" style="font-size:1.6rem;">CV / 経歴</h1>
+
+      <!-- Education -->
+      <section class="section fade-in">
+        <h2 class="section-title">学歴 (Education)</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-period">2022年4月 - 2025年度修了見込</div>
+            <div class="timeline-title">東北大学大学院 工学研究科 機械機能創成専攻</div>
+            <div class="timeline-detail">博士後期課程 (指導教員: 丸田 薫 教授)</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">2020年4月 - 2022年3月</div>
+            <div class="timeline-title">東北大学大学院 工学研究科 機械機能創成専攻</div>
+            <div class="timeline-detail">修士課程修了 (指導教員: 丸田 薫 教授)</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">2016年4月 - 2020年3月</div>
+            <div class="timeline-title">東北大学 工学部 機械知能・航空工学科</div>
+            <div class="timeline-detail">学士課程修了</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grants and Fellowships -->
+      <section class="section fade-in">
+        <h2 class="section-title">研究費・フェローシップ (Grants and Fellowships)</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-period">2024年 - 2025年</div>
+            <div class="timeline-title">日本学術振興会 特別研究員 (DC)</div>
+            <div class="timeline-detail">JSPS Research Fellowship for Young Scientists</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">2022年 - 2024年</div>
+            <div class="timeline-title">東北大学 学際高等研究教育院</div>
+            <div class="timeline-detail">Division of Interdisciplinary Advanced Research and Education</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Research Projects -->
+      <section class="section fade-in">
+        <h2 class="section-title">研究プロジェクト (Research Projects)</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-period">2020年 - 現在</div>
+            <div class="timeline-title">統一的燃焼限界理論のための低速低ルイス数対向流火炎実験</div>
+            <div class="timeline-detail">微小重力実験の実施、実験装置の設計を担当</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="section fade-in">
+        <h2 class="section-title">その他の活動 (Experience)</h2>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-period">2022年11月</div>
+            <div class="timeline-title">共同主催者</div>
+            <div class="timeline-detail">The 18th International Students / Young Birds Seminar on Multi-scale Flow Dynamics, 19th International Conference on Flow Dynamics, 仙台</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 角田 陽 (Akira Tsunoda)</p>
+    </div>
+  </footer>
+
+  <script>
+    const toggle = document.querySelector('.theme-toggle');
+    const html = document.documentElement;
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      html.setAttribute('data-theme', saved);
+      toggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      html.setAttribute('data-theme', 'dark');
+      toggle.textContent = '☀️';
+    }
+    toggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    navToggle.addEventListener('click', () => navMenu.classList.toggle('open'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
