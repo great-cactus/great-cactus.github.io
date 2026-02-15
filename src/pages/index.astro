@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { ArrowRight, Mail, MapPin } from 'lucide-react';
+
+const researchAreas = (await getCollection('research'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const featuredPapers = (await getCollection('publications'))
+  .filter(p => p.data.featured)
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 3);
+---
+
+<Layout>
+  <!-- Profile Section -->
+  <section class="pt-20 pb-12 bg-gradient-to-b from-gray-50 to-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+        <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-4xl text-gray-400 shrink-0 border-4 border-white shadow-lg">
+          <span>👤</span>
+        </div>
+        <div class="text-center sm:text-left">
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">角田 陽</h1>
+          <p class="text-lg text-gray-500 mt-1">Akira Tsunoda</p>
+          <p class="text-gray-600 mt-2">
+            東北大学 工学研究科<br class="sm:hidden" />
+            機械機能創成専攻
+          </p>
+          <div class="flex flex-wrap justify-center sm:justify-start gap-2 mt-4">
+            <span class="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">燃焼</span>
+            <span class="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">反応</span>
+            <span class="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">層流火炎理論</span>
+            <span class="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">燃焼限界</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">About</h2>
+      <p class="text-gray-700 leading-relaxed">
+        どのようにすれば自然を上手く騙して，人の役に立つように扱えるか，物理学を使って考えています。
+        具体的には，燃焼・反応の基礎的なダイナミクスに関する研究に取り組んでいます。
+      </p>
+    </div>
+  </section>
+
+  <!-- Research Section -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-end mb-6">
+        <h2 class="text-2xl font-bold text-gray-900" data-i18n-key="nav.research">研究</h2>
+        <a href="/research" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 group text-sm">
+          <span>詳細</span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {researchAreas.map(area => (
+          <a href={`/research/${area.id.replace(/\.[^/.]+$/, "")}`} class="bg-white rounded-xl border border-gray-100 p-6 hover:shadow-md transition-all hover:-translate-y-1 group">
+            <h3 class="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              {area.data.title}
+            </h3>
+            <p class="text-gray-600 text-sm line-clamp-3">{area.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Publications -->
+  {featuredPapers.length > 0 && (
+    <section class="py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-6">
+          <h2 class="text-2xl font-bold text-gray-900" data-i18n-key="section.selectedPubs">主な論文</h2>
+          <a href="/achievements" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 group text-sm">
+            <span data-i18n-key="section.viewAll">すべて見る</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+        <div class="space-y-4">
+          {featuredPapers.map(paper => (
+            <div class="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-sm transition-shadow">
+              <h3 class="font-semibold text-gray-900 mb-1">{paper.data.title}</h3>
+              <p class="text-gray-500 text-sm mb-1">{paper.data.authors.join(', ')}</p>
+              <p class="text-gray-600 text-sm">
+                <span class="font-medium text-blue-600">{paper.data.venue}</span>,
+                {paper.data.year}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Contact Section -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Contact</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="flex items-start gap-3 bg-white rounded-xl border border-gray-100 p-5">
+          <Mail className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Email</p>
+            <a href="mailto:tsunoda@edyn.ifs.tohoku.ac.jp" class="text-gray-900 hover:text-blue-600 transition-colors">
+              tsunoda@edyn.ifs.tohoku.ac.jp
+            </a>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 bg-white rounded-xl border border-gray-100 p-5">
+          <MapPin className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Address</p>
+            <p class="text-gray-900">〒980-8579 宮城県仙台市青葉区荒巻字青葉6-6</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

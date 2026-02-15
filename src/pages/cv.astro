@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { GraduationCap, Award, Microscope, Users } from 'lucide-react';
+
+const education = [
+  {
+    period: '2022年4月 - 2025年度修了見込',
+    title: '東北大学大学院 工学研究科 機械機能創成専攻',
+    detail: '博士後期課程 (指導教員: 丸田 薫 教授)',
+  },
+  {
+    period: '2020年4月 - 2022年3月',
+    title: '東北大学大学院 工学研究科 機械機能創成専攻',
+    detail: '修士課程修了 (指導教員: 丸田 薫 教授)',
+  },
+  {
+    period: '2016年4月 - 2020年3月',
+    title: '東北大学 工学部 機械知能・航空工学科',
+    detail: '学士課程修了',
+  },
+];
+
+const grants = [
+  {
+    period: '2024年 - 2025年',
+    title: '日本学術振興会 特別研究員 (DC)',
+    detail: 'JSPS Research Fellowship for Young Scientists',
+  },
+  {
+    period: '2022年 - 2024年',
+    title: '東北大学 学際高等研究教育院',
+    detail: 'Division of Interdisciplinary Advanced Research and Education',
+  },
+];
+
+const projects = [
+  {
+    period: '2020年 - 現在',
+    title: '統一的燃焼限界理論のための低速低ルイス数対向流火炎実験',
+    detail: '微小重力実験の実施、実験装置の設計を担当',
+  },
+];
+
+const experience = [
+  {
+    period: '2022年11月',
+    title: '共同主催者',
+    detail: 'The 18th International Students / Young Birds Seminar on Multi-scale Flow Dynamics, 19th International Conference on Flow Dynamics, 仙台',
+  },
+];
+
+const sections = [
+  { id: 'education', title: '学歴', key: 'cv.education', icon: GraduationCap, items: education },
+  { id: 'grants', title: '研究費・フェローシップ', key: 'cv.grants', icon: Award, items: grants },
+  { id: 'projects', title: '研究プロジェクト', key: 'cv.projects', icon: Microscope, items: projects },
+  { id: 'experience', title: 'その他の活動', key: 'cv.experience', icon: Users, items: experience },
+];
+---
+
+<Layout title="経歴">
+  <div class="max-w-4xl mx-auto px-4 py-12 sm:py-20">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4" data-i18n-key="cv.title">経歴</h1>
+    </div>
+
+    <div class="space-y-16">
+      {sections.map(section => (
+        <section id={section.id}>
+          <div class="flex items-center gap-3 mb-8">
+            <section.icon className="w-6 h-6 text-blue-600" />
+            <h2 class="text-2xl font-bold text-gray-900" data-i18n-key={section.key}>{section.title}</h2>
+          </div>
+
+          <div class="relative pl-8 border-l-2 border-gray-200 space-y-8">
+            {section.items.map(item => (
+              <div class="relative">
+                <div class="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-blue-600 border-4 border-white shadow-sm"></div>
+                <div class="bg-white rounded-xl border border-gray-100 p-5 hover:shadow-sm transition-shadow">
+                  <p class="text-sm text-blue-600 font-medium mb-1">{item.period}</p>
+                  <h3 class="font-semibold text-gray-900">{item.title}</h3>
+                  <p class="text-gray-600 text-sm mt-1">{item.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</Layout>

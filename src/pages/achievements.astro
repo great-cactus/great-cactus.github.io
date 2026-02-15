@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import PublicationItem from '../components/PublicationItem.astro';
+import HonorCard from '../components/HonorCard.astro';
+import { BookOpen, Award } from 'lucide-react';
+
+const allPubs = (await getCollection('publications'))
+  .sort((a, b) => b.data.year - a.data.year);
+
+const honors = (await getCollection('honors'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const categories = [
+  { id: 'journal', key: 'publications.journal', label: '査読付き学術論文' },
+  { id: 'review', key: 'publications.review', label: '解説・総説' },
+  { id: 'conference-paper', key: 'publications.conference-paper', label: '国際会議論文' },
+  { id: 'invited', key: 'publications.invited', label: '招待講演' },
+  { id: 'presentation', key: 'publications.presentation', label: '学会発表' },
+] as const;
+
+const pubsByCategory = Object.fromEntries(
+  categories.map(cat => [cat.id, allPubs.filter(p => p.data.category === cat.id)])
+);
+---
+
+<Layout title="業績">
+  <div class="max-w-4xl mx-auto px-4 py-12 sm:py-20">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4" data-i18n-key="achievements.title">業績</h1>
+      <p class="text-lg text-gray-600" data-i18n-key="achievements.subtitle">
+        学術論文および受賞歴。
+      </p>
+    </div>
+
+    <!-- Navigation Pills -->
+    <div class="flex flex-wrap gap-3 mb-12 sticky top-20 z-30 bg-white/80 backdrop-blur p-4 rounded-2xl border border-gray-100 shadow-sm">
+      {categories.map(cat => {
+        const count = pubsByCategory[cat.id]?.length || 0;
+        return count > 0 && (
+          <a
+            href={`#${cat.id}`}
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium"
+          >
+            <span data-i18n-key={cat.key}>{cat.label}</span>
+            <span class="bg-white px-2 py-0.5 rounded-full text-xs text-gray-400 shadow-sm">{count}</span>
+          </a>
+        );
+      })}
+      {honors.length > 0 && (
+        <a
+          href="#honors"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium"
+        >
+          <span data-i18n-key="achievements.honors">受賞</span>
+          <span class="bg-white px-2 py-0.5 rounded-full text-xs text-gray-400 shadow-sm">{honors.length}</span>
+        </a>
+      )}
+    </div>
+
+    <div class="space-y-16">
+      {categories.map(cat => {
+        const pubs = pubsByCategory[cat.id] || [];
+        if (pubs.length === 0) return null;
+
+        // Group by year within each category
+        const years = [...new Set(pubs.map(p => p.data.year))];
+
+        return (
+          <section id={cat.id} class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-6">
+              <BookOpen className="w-6 h-6 text-blue-600" />
+              <h2 class="text-2xl font-bold text-gray-900" data-i18n-key={cat.key}>{cat.label}</h2>
+            </div>
+            <div class="space-y-8">
+              {years.map(year => (
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-700 mb-2 border-b border-gray-100 pb-1">{year}</h3>
+                  <div class="space-y-0">
+                    {pubs.filter(p => p.data.year === year).map(paper => (
+                      <PublicationItem entry={paper} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+
+      <!-- Honors -->
+      {honors.length > 0 && (
+        <section id="honors" class="scroll-mt-24">
+          <div class="flex items-center gap-3 mb-6">
+            <Award className="w-6 h-6 text-blue-600" />
+            <h2 class="text-2xl font-bold text-gray-900" data-i18n-key="achievements.honors">受賞</h2>
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2">
+            {honors.map(honor => <HonorCard honor={honor} />)}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+</Layout>
